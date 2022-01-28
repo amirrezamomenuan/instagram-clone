@@ -1,6 +1,9 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import redirect, render, HttpResponse
 from . import models, forms
 from .utils import phone_number_validator
+from django.contrib.auth import authenticate,login
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
 confirmation_codes = []
 
 
@@ -61,8 +64,8 @@ def signup_profile_view(request):
             # user = models.User.objects.create(username = username, phone_number = phone_number)
             user.set_password(password)
             user.save()
-            #TODO : this should then change to another path
-            return HttpResponse("User created successfully")
+            login(request, user)
+            return redirect("profile:show", profile_username = username)
         else:
             content = {"form":form, 'phone_number': form.data['phone_number']}
             return render(request , 'user_signup_form.html', content)
@@ -71,15 +74,86 @@ def signup_profile_view(request):
     form = forms.phoneNumberForm()
     content = {"form":form}
     return render(request , 'user_signup_form.html', content)
+
+
+# this view is for logging in users that have their passwordand username
+def signin_profile_view(request):
+    if request.method == 'POST':
+        form = forms.signinForm(request.POST)
+        if form.is_valid():
+            print("signin form is valid")
+            user = authenticate(request, username = form.cleaned_data['username'], password = form.cleaned_data['password'])
+            if user:
+                login(request, user)
+                return HttpResponse('login succesfull :)')
+                
+        content = {"form":form, "form_errors":form.errors}
+        return render(request , 'user_signin_form.html', content)
+
+    form = forms.signinForm()
+    content = {"form":form}
+    return render(request , 'user_signin_form.html', content)
+
+
+@login_required(login_url= 'profile:signin')
+def change_profile_view(request):
+    if request.method == 'POST':
+        instance = get_object_or_404(models.Profile, user = request.user)
+        form = forms.changeProfileForm(request.POST,request.FILES, instance=instance)
+        if form.is_valid():
+            form.save()
+            return redirect("profile:show", profile_username = request.user.username)
+    
+    form = forms.changeProfileForm(instance = get_object_or_404(models.Profile, user = request.user))
+    return render(request, "change_profile.html", {'form':form})
+
+@login_required(login_url= 'profile:signin')
+def show_profile_view(request, profile_username):
+    user = get_object_or_404(models.User, username = profile_username)
+    profile = get_object_or_404(models.Profile, user = user)
+    posts = []
+    owner = request.user == user
+    return render(request, "show-profile.html", {'user':user, 'profile':profile, 'posts':posts, 'owner':owner})
+
+
+# this view is for logging in users that have forgotten their password but have account
+def forgot_password_view(request):
+    print(request.POST)
+    if request.POST.get('confirmation_code'):
+        print('hi 1')
+        form = forms.codeValidationForm(request.POST)
+        if form.is_valid():
+            print('verification_code is valid')
+            verification_code = form.cleaned_data['confirmation_code']
+            phone_number = form.data['phone_number']
+            print(confirmation_codes)
+            if verification_code == str(confirmation_codes[-1][0]):
+                print("yes")
+                user = models.User.objects.get(phone_number = phone_number)
+                login(request, user)
+                return HttpResponse('login succesfull :)')
+
+            else:
+                print('no')
+                content = {'form':form, 'phone_number':phone_number,}
+                return render(request, "forgot_password.html", content)
+        return HttpResponse(" invalid verification")
+
+    if request.method == "POST" and not request.POST.get('verification_code'):
+        print('hi 2')
+        form = forms.phoneNumberForm_forgot(request.POST)
+        phone_number = ''
+        if form.is_valid():
+            phone_number = form.cleaned_data['phone_number']
+            form = forms.codeValidationForm()
+            sms = phone_number_validator(phone_number)
+            confirmation_codes.append(sms)
+            
+        content = {'form':form, 'phone_number':phone_number,}
+        return render(request, "forgot_password.html", content)
+
             
 
-def signin_profile_view(request):
-    return HttpResponse("signin my profile")
-
-
-def change_profile_view(request):
-    return HttpResponse("change my profile")
-
-
-def show_profile_view(request, profile_username):
-    return HttpResponse(profile_username)
+    form = forms.phoneNumberForm_forgot()
+    content = {'form':form}
+    return render(request, "forgot_password.html", content)

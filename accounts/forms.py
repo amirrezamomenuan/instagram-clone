@@ -1,3 +1,4 @@
+from cProfile import label
 from . import models
 from django import forms
 
@@ -51,3 +52,33 @@ class phoneNumberForm(forms.Form):
 
 class codeValidationForm(forms.Form):
     confirmation_code = forms.CharField(max_length=6)
+
+
+class signinForm(forms.Form):
+    username = forms.CharField(max_length=32, label="username")
+    password = forms.CharField(max_length=16, min_length=8, label= "password")
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if not models.User.objects.filter(username = username).exists():
+            raise forms.ValidationError(f"there is no username as {username}")
+        return username
+
+class phoneNumberForm_forgot(forms.Form):
+    phone_number = forms.CharField(max_length=11)
+
+    def clean_phone_number(self):
+        number = self.cleaned_data['phone_number']
+        if not all_numeric(number):
+            raise forms.ValidationError("can onlu use numerical digits")
+        
+        if not models.User.objects.filter(phone_number = number).exists():
+            raise forms.ValidationError("this phone number doesnt exist! click on signup to create a profile")
+
+        return number
+
+
+class changeProfileForm(forms.ModelForm):
+    class Meta:
+        model = models.Profile
+        fields = ['bio', 'profile_image']
