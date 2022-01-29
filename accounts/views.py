@@ -1,3 +1,4 @@
+from cProfile import Profile
 from django.shortcuts import redirect, render, HttpResponse
 from . import models, forms
 from .utils import phone_number_validator
@@ -157,3 +158,10 @@ def forgot_password_view(request):
     form = forms.phoneNumberForm_forgot()
     content = {'form':form}
     return render(request, "forgot_password.html", content)
+
+
+def search_user_view(request):
+    if request.method == 'POST':
+        given_input = request.POST.get('search')
+        profiles = models.Profile.objects.filter(user__username__icontains = given_input)
+        return render(request, 'search_results.html', {'profiles':profiles})

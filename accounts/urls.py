@@ -9,5 +9,6 @@ urlpatterns = [
     path('show-profile/<str:profile_username>', views.show_profile_view, name= "show"),
     path('change/', views.change_profile_view, name= "change"),
     path('forgot-password/', views.forgot_password_view, name= "forgot_password"),
+    path('search/', views.search_user_view, name= "search_user"),
 
 ]
