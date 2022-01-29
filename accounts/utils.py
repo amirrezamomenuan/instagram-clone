@@ -3,7 +3,7 @@ from unittest import result
 import requests
 import random
 
-apikey = '58664269616D2B437844506B79694F6F735933434F4E6E49684D734E6B7842796B386F316D32666876776B3D'
+apikey = ""
 address = f"https://api.kavenegar.com/v1/{apikey}/sms/send.json"
 
 
