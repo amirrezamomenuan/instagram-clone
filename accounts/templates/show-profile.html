@@ -24,16 +24,18 @@
         <h2>{{profile.user.username}}</h2>
         <div class="follow_state">
             <div class="followers">
-                <a href="">{{profile.followers_count}} followers</a>
+                <a href="{% url 'profile:followers' requested=profile.user.username%}">{{profile.followers_count}} followers</a>
             </div>
 
             <div class="following">
-                <a href="">{{profile.user.following_count}} following</a>
+                <a href="{% url 'profile:following' requested=profile.user.username%}">{{profile.user.following_count}} following</a>
             </div>
         </div>
         <div class="follow">
             <form action="">
                 {% if following %}
+                {% csrf_token %}
+                <input type="hidden" name="">
                 <input type="submit" value="unfollow" class= "follow_submit_btn">
                 </h1>
                 {% else %}

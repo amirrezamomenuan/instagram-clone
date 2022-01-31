@@ -1,5 +1,7 @@
 from cProfile import Profile
 from django.shortcuts import redirect, render, HttpResponse
+
+from post.models import Post
 from . import models, forms
 from .utils import phone_number_validator
 from django.contrib.auth import authenticate,login
@@ -112,9 +114,10 @@ def change_profile_view(request):
 def show_profile_view(request, profile_username):
     user = get_object_or_404(models.User, username = profile_username)
     profile = get_object_or_404(models.Profile, user = user)
-    posts = []
+    posts = Post.objects.filter(owner = profile)
     owner = request.user == user
-    return render(request, "show-profile.html", {'user':user, 'profile':profile, 'posts':posts, 'owner':owner})
+    state = request.user in profile.followers.all()
+    return render(request, "show-profile.html", {'user':user, 'profile':profile, 'posts':posts, 'owner':owner, 'following':state})
 
 
 # this view is for logging in users that have forgotten their password but have account
@@ -163,5 +166,15 @@ def forgot_password_view(request):
 def search_user_view(request):
     if request.method == 'POST':
         given_input = request.POST.get('search')
-        profiles = models.Profile.objects.filter(user__username__icontains = given_input)
-        return render(request, 'search_results.html', {'profiles':profiles})
+        profile = models.Profile.objects.get(user__username__icontains = given_input)
+        return render(request, 'search_results.html', {'profiles':profile})
+
+def followers_view(request, requested):
+    profile = models.Profile.objects.get(user__username = requested)
+    group = profile.followers.all()
+    return render(request, 'followers.html', {'group':group,'user':profile.user, 'group_name':'followers'})
+
+def following_view(request, requested):
+    profile = models.Profile.objects.get(user__username = requested)
+    group = models.User.objects.get(username = requested).following.all()
+    return render(request, 'following.html', {'group':group,'user':profile.user, 'group_name':'following'})

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{user.username}} {{group_name}}
+{% endblock %}
+
+
+
+{% block content %}
+<div class="person_container">
+    {% for person in group %}
+        <div class="person" style="display: flex; justify-content: flex-start; align-items: center;">
+            
+            <a href="{% url 'profile:show' profile_username=person.username%}" style="display: flex; margin: 1rem;text-decoration: none;">
+                <img src="{{person.profile.profile_image.url}}" alt="" style="width: 120px; height: 120px; border-radius: 50%;">
+                <p style="font-size: 2rem;margin-left: 1.5rem; margin-right: 2rem; color: rgb(9, 3, 88); display: flex; align-items: center;">{{person.username}}</p>
+            </a>
+
+            <form action="">
+                {% csrf_token %}
+                <input type="hidden" name="follow" value="{{person.user.username}}">
+                <input type="submit" value="follow" class="follow_btn">
+            </form>
+        </div>
+        <hr style="color: gray;">
+    {% endfor %}
+</div>
+{% endblock %}
+
