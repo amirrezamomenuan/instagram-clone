@@ -36,6 +36,15 @@ class Post(models.Model):
     def likes_count(self):
         return self.like_set.all().count()
     
+    def comments_count(self):
+        return self.comment_set.all().count()
+    
+    def all_liked_users(self):
+        query = self.like_set.values_list('owner__user__username', flat = True)
+        print(query)
+        # print(query[0])
+        return list(query)
+    
     
 
 

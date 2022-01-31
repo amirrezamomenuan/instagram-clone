@@ -34,7 +34,7 @@ def change_post_view(request, post_pk):
 
 def watch_post_view(request, post_pk):
     post = get_object_or_404(Post, id = post_pk)
-    return HttpResponse("this is a post")
+    return render(request, 'watch.html', {'post':post})
 
 
 @login_required(login_url='accounts:signin')
