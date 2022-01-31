@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if form_errors %}
+        <p>{{ form_errors }}</p>
+    {% endif %}
+    <form action="{% url 'profile:signup' %}" method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        {% if phone_number %}
+            <input type="hidden" name="phone_number" value="{{phone_number}}">
+        {% endif %}
+        <input type="submit" value="signup">
+    </form>
+{% endblock %}

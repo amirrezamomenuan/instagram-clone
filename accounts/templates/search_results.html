@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="search_bar">
+        <form action="{% url 'profile:search_user' %}" method="POST">
+            {% csrf_token %}
+            <input type="text" placeholder="search in users", name="search">
+            <input type="submit" value="search">
+        </form>
+    </div>
+    <div class="container_result">
+        <div class="result_container_explore">
+            {% for profile in profiles %}
+                <div class="user">
+                    <a href="{% url 'profile:show' profile_username=profile.user.username %}" class="search_results">
+                        <img src="{{profile.profile_image.url}}" alt="" style="width: 100px; height: 100px;">
+                        <h2>{{profile.user.username}}</h2>
+                    </a>
+                </div>
+            {% endfor %}
+            {% if not profiles %}
+                <h1>no matching results</h1>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{user.username}}
+{% endblock %}
+
+
+
+{% block content %}
+<div class="profile_header">
+    {% if owner %}
+        <div class="go_to_settings"> <a href="{% url 'profile:change' %}">profile settings</a></div>
+    {% endif %}
+
+
+</div>
+
+<div class="profile_details">
+    <div class="profile_image">
+        <img src="{{profile.profile_image.url}}" alt="image_not_found">
+    </div>
+
+    <div class="details">
+        <h2>{{profile.user.username}}</h2>
+        <div class="follow_state">
+            <div class="followers">
+                <a href="">{{profile.followers_count}} followers</a>
+            </div>
+
+            <div class="following">
+                <a href="">{{profile.user.following_count}} following</a>
+            </div>
+        </div>
+        <div class="follow">
+            <form action="">
+                {% if following %}
+                <input type="submit" value="unfollow" class= "follow_submit_btn">
+                </h1>
+                {% else %}
+                <input type="submit" value="follow" class= "follow_submit_btn">
+                {% endif %}
+            </form>
+            <form action="">
+                {% if following %}
+                <input type="submit" value="send message" class= "send_submit_btn">
+                {% endif %}
+            </form>
+        </div>
+        
+    </div>
+
+
+</div>
+
+<div class="profile_bio">
+    <span>bio </span>{{profile.bio}}
+</div>
+
+<h1 style="text-align: center; color: rgb(117, 117, 117);">posts</h1>
+<hr>
+
+<div class="all_posts">
+    <div class="post_section">
+        {% for post in posts %}
+            <div class="every_post">
+                <a href=""><img src="{{post.image.url}}" alt=""></a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

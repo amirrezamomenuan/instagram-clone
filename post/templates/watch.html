@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="single_post_container">
+        <div class="post_image_watch">
+            <img src="{{ post.image.url}}" alt="">
+        </div>
+        <div class="utlis_post">
+    
+            <div class="like">
+                <form action="{% url 'post:like' pk=post.id%}" method="POST">
+                    {% csrf_token %}
+                        <button style="border: none; background-color: transparent; cursor: pointer;" ></button><i class="fas fa-heart" style="color: red; font-size: 2rem; cursor: pointer;"></i></button>
+                </form>
+                <div class="likes_count">
+                    <h4 style="color: red;">{{post.likes_count}} Likes</h4>
+                </div>
+            </div>
+    
+            <div class="comment">
+                <a href="{% url 'post:comments' pk=post.id%}">
+                    <button style="border: none; background-color: transparent; cursor: pointer;"><i class="far fa-comment" style="font-size: 2rem;"></i></button>
+                </a>
+                <h4>{{post.comments_count}} comments</h4>
+            </div>
+    
+        </div>
+    
+    </div>
+{% endblock %}

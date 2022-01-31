@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <a href="{% url 'home_and_explore:home' %}"> <- back to post</a>
+    <br>
+    {% for comment in comments %}
+        <img src="{{comment.writer.profile_image.url}}" alt="" style="width: 40px; height: 40px;">
+        <p>{{comment.writer.user.username}}</p>
+        <p>{{comment.content}}</p>
+        <hr>
+    {% endfor %}
+
+
+
+    <form action="{% url 'post:comments' pk=pk %}" method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="send">
+    </form>
+
+{% endblock %}
