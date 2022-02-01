@@ -32,12 +32,12 @@
             </div>
         </div>
         <div class="follow">
-            <form action="">
-                {% if following %}
+            
+            <form action="{% url 'profile:follow_manager' %}" method="POST">
+                <input type="hidden" name="follow" value="{{profile.user.username}}">
                 {% csrf_token %}
-                <input type="hidden" name="">
+                {% if following %}
                 <input type="submit" value="unfollow" class= "follow_submit_btn">
-                </h1>
                 {% else %}
                 <input type="submit" value="follow" class= "follow_submit_btn">
                 {% endif %}

@@ -178,3 +178,22 @@ def following_view(request, requested):
     profile = models.Profile.objects.get(user__username = requested)
     group = models.User.objects.get(username = requested).following.all()
     return render(request, 'following.html', {'group':group,'user':profile.user, 'group_name':'following'})
+
+@login_required(login_url= 'profile:signin')
+def follow_manager_view(request):
+    username = request.POST.get('follow')
+    profile = get_object_or_404(models.Profile, user__username = username)
+    user = request.user
+    if request.user not in profile.followers.all():
+        profile.followers.add(request.user)
+    else:
+        profile.followers.remove(request.user)
+    profile.save()
+
+    posts = Post.objects.filter(owner = profile)
+    owner = request.user.username == username
+    state = request.user in profile.followers.all()
+    return render(request, "show-profile.html", {'user':user, 'profile':profile, 'posts':posts, 'owner':owner, 'following':state})
+
+
+    

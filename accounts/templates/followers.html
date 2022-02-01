@@ -16,11 +16,20 @@
                 <p style="font-size: 2rem;margin-left: 1.5rem; margin-right: 2rem; color: rgb(9, 3, 88); display: flex; align-items: center;">{{person.username}}</p>
             </a>
 
-            <form action="">
+            <!-- <form action="">
                 {% csrf_token %}
                 <input type="hidden" name="follow" value="{{person.user.username}}">
                 <input type="submit" value="follow" class="follow_btn">
-            </form>
+            </form> -->
+            <!-- <form action="{% url 'profile:follow_manager' %}" method="POST">
+                <input type="hidden" name="follow" value="{{person.username}}">
+                {% csrf_token %}
+                {% if following %}
+                <input type="submit" value="unfollow" class= "follow_btn">
+                {% else %}
+                <input type="submit" value="follow" class= "follow_btn">
+                {% endif %}
+            </form> -->
         </div>
         <hr style="color: gray;">
     {% endfor %}

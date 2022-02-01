@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="search_bar">
+        <form action="{% url 'profile:search_user' %}" method="POST">
+            {% csrf_token %}
+            <input type="text" placeholder="search in users" name="search">
+            <input type="submit" value="search">
+        </form>
+    </div>
+    <div class="container_explore">
+        <div class="post_container_explore">
+            {% for post in posts %}
+                <div class="post_image" >
+                    <a href="{% url 'post:watch' post_pk=post.id %}">
+                        <img src="{{post.image.url}}" alt="" style="width: 300px; height: 300px;">
+                    </a>
+                </div>
+        
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

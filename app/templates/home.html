@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% for post in posts %}
+    <div class="post">
+        <div class="Post_header" style="display: flex;align-items: center;">
+            <div class="user_image"><img src="{{post.owner.profile_image.url}}" alt="" style="height: 100px; border-radius: 50%; width: 100px;"></div>
+            <div class="users_name"><p>{{post.owner.user.username}}</p></div>
+        </div>
+
+        <div class="post_image">
+            <img src="{{post.image.url}}" alt="" style="width: 750px; height: 750px;">
+        </div>
+
+        <div class="post_utils">
+
+            <div class="like">
+                <form action="{% url 'post:like' pk=post.id%}" method="POST">
+                    {% csrf_token %}
+                    {% if username in post.all_liked_users %}
+                        <button style="border: none; background-color: transparent; cursor: pointer;" ><i class="fas fa-heart" style="color: red; font-size: 2rem; cursor: pointer;"></i></button>
+                    {% else %}
+                        <button style="border: none; background-color: transparent; cursor: pointer;" ><i class="far fa-heart" style="color: red; font-size: 2rem; cursor: pointer;"></i></button>
+                    {% endif %}
+                </form>
+                <div class="likes_count">
+                    <h4 style="color: red;">{{post.likes_count}} Likes</h4>
+                </div>
+            </div>
+
+            <div class="comment">
+                <a href="{% url 'post:comments' pk=post.id%}">
+                    <button style="background-color: royalblue;"><p>hell</p></button>
+                </a>
+            </div>
+
+        </div>
+        <!-- {{post.all_liked_users}} -->
+
+        <div class="post_caption">
+            <p>{{post.caption}}</p>
+        </div>
+
+        <div class="post_comments">
+            {% for comment in post.last_3_comments %}
+                <p>{{comment.content}}</p>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}
