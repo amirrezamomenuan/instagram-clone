@@ -10,6 +10,7 @@ urlpatterns = [
     path('activities/', include('activities.urls')),
     path('post/', include('post.urls')),
     path('profile/', include('accounts.urls')),
+    path('message/', include('direct_message.urls')),
     path('', include('app.urls')),
 
 ]

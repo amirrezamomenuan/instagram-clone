@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'activities',
     'post',
     'accounts.apps.AccountsConfig',
+    'direct_message',
 ]
 
 MIDDLEWARE = [

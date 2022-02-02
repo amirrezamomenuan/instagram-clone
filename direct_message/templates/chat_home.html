@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{user.username}} {{group_name}}
+{% endblock %}
+
+
+
+{% block content %}
+<div class="chats_container">
+    {% for chat in chats %}
+        {% if chat.recipient.user.username == username %}
+            <a href="{% url 'chat:chat_page' chat_id=chat.id%}">  
+                <div class="conversation_container">
+                    <img src="{{chat.sender.profile_image.url}}" alt="">
+                    <h2>{{chat.sender.user.username}}</h2>
+                </div>
+            </a>
+        {% else %}
+            <a href="{% url 'chat:chat_page' chat_id=chat.id%}">  
+                <div class="conversation_container">
+                    <img src="{{chat.recipient.profile_image.url}}" alt="">
+                    <h2>{{chat.recipient.user.username }}</h2>
+                </div>
+            </a>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}
+
+
+

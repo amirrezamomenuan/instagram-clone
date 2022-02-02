@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{user.username}} {{group_name}}
+{% endblock %}
+
+
+
+{% block content %}
+<div class="container">
+    <div class="messages_container">
+        {% for message in messages %}
+            {% if message.status %}
+                
+                <div class="conversation_container right">
+                    <div class="message-container">
+                        {% if message.image_content %}
+                            <img src="{{message.image_content.url}}" alt="">
+                        {% endif %}
+                        <h2>{{message.text_content}}</h2>
+                    </div>
+                    <img src="{{message.on_chat.sender.profile_image.url}}" alt="" class="message_profile">
+                </div>
+                
+            {% else %}
+                <div class="conversation_container left">
+                    <img src="{{message.on_chat.recipient.profile_image.url}}" alt=""  class="message_profile">
+
+                    <div class="message-container">
+                        {% if message.image_content %}
+                            <img src="{{message.image_content.url}}" alt="">
+                        {% endif %}
+                        <h2>{{message.text_content }}</h2>
+                    </div>
+
+                </div>
+                
+            {% endif %}
+        {% endfor %}
+        <form action="{% url 'chat:chat_page' chat_id=messages.0.on_chat.id%}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form.image_content}}
+            {{form.text_content}}
+            <button type="submit"><i class="fa fa-send-o" style="font-size: 2rem; margin: 0%;" ></i></button>
+        </form>
+        <div class="spacer"></div>
+    </div>
+</div>
+{% endblock %}
+
+
+
