@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% for activity in activities %}
+        <p>{{activity.message}}</p>
+        <hr>
+    {% endfor %}
+
+
+{% endblock %}

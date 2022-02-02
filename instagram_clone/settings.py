@@ -39,9 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
-    'activities',
     'post',
     'accounts.apps.AccountsConfig',
+    'activities.apps.ActivitiesConfig',
     'direct_message',
 ]
 
