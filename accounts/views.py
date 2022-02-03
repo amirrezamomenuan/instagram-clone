@@ -1,5 +1,7 @@
 from cProfile import Profile
 from django.shortcuts import redirect, render, HttpResponse
+from direct_message.models import Chat
+from django.db.models import Q
 
 from post.models import Post
 from . import models, forms
@@ -117,7 +119,11 @@ def show_profile_view(request, profile_username):
     posts = Post.objects.filter(owner = profile)
     owner = request.user == user
     state = request.user in profile.followers.all()
-    return render(request, "show-profile.html", {'user':user, 'profile':profile, 'posts':posts, 'owner':owner, 'following':state})
+    if Chat.objects.filter((Q(sender = profile) & Q(recipient = request.user.profile)) | (Q(recipient = profile) & Q(sender = request.user.profile))).exists():
+        chat_id = Chat.objects.filter((Q(sender = profile) & Q(recipient = request.user.profile)) | (Q(recipient = profile) & Q(sender = request.user.profile))).first().id
+    else:
+        chat_id = 0
+    return render(request, "show-profile.html", {'user':user, 'profile':profile, 'posts':posts, 'owner':owner, 'following':state, 'chats_id':chat_id})
 
 
 # this view is for logging in users that have forgotten their password but have account
@@ -184,16 +190,12 @@ def follow_manager_view(request):
     username = request.POST.get('follow')
     profile = get_object_or_404(models.Profile, user__username = username)
     user = request.user
-    if request.user not in profile.followers.all():
-        profile.followers.add(request.user)
-    else:
-        profile.followers.remove(request.user)
-    profile.save()
+    if user.profile != profile:
+        if request.user not in profile.followers.all():
+            profile.followers.add(request.user)
+        else:
+            profile.followers.remove(request.user)
+        profile.save()
 
-    posts = Post.objects.filter(owner = profile)
-    owner = request.user.username == username
-    state = request.user in profile.followers.all()
-    return render(request, "show-profile.html", {'user':user, 'profile':profile, 'posts':posts, 'owner':owner, 'following':state})
-
-
+    return redirect("profile:show", profile_username = username)
     

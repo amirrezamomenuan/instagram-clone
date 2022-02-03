@@ -34,7 +34,9 @@ def change_post_view(request, post_pk):
 
 def watch_post_view(request, post_pk):
     post = get_object_or_404(Post, id = post_pk)
-    return render(request, 'watch.html', {'post':post})
+    has_liked = request.user.username in post.like_set.values_list("owner__user__username", flat = True)
+    print(has_liked)
+    return render(request, 'watch.html', {'post':post, 'has_liked':has_liked,})
 
 
 @login_required(login_url='accounts:signin')
@@ -47,6 +49,8 @@ def like_view(request, pk):
             like.delete()
         else:
             Like.objects.create(on_post = post, owner= request.user.profile)
+        if request.POST.get('next'):
+            return redirect("post:watch",post_pk = pk)
         return redirect('home_and_explore:home')
 
 @login_required(login_url='accounts:signin')
