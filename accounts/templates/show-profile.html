@@ -8,10 +8,7 @@
 
 {% block content %}
 <div class="profile_header">
-    {% if owner %}
-        <div class="go_to_settings"> <a href="{% url 'profile:change' %}">profile settings</a></div>
-    {% endif %}
-
+    
 
 </div>
 
@@ -32,21 +29,27 @@
             </div>
         </div>
         <div class="follow">
-            
-            <form action="{% url 'profile:follow_manager' %}" method="POST">
-                <input type="hidden" name="follow" value="{{profile.user.username}}">
-                {% csrf_token %}
-                {% if following %}
-                <input type="submit" value="unfollow" class= "follow_submit_btn">
-                {% else %}
-                <input type="submit" value="follow" class= "follow_submit_btn">
-                {% endif %}
-            </form>
-            <form action="">
-                {% if following %}
-                <input type="submit" value="send message" class= "send_submit_btn">
-                {% endif %}
-            </form>
+            {% if owner %}
+                <div class="go_to_settings"> <a href="{% url 'profile:change' %}" ><button style="background-color: rgb(255, 151, 31); color: #fff; width: 200px; height: 50px;">profile settings</button></a></div>
+            {% else %}
+                <form action="{% url 'profile:follow_manager' %}" method="POST">
+                    <input type="hidden" name="follow" value="{{profile.user.username}}">
+                    {% csrf_token %}
+                    {% if following %}
+                    <input type="submit" value="unfollow" class= "follow_submit_btn">
+                    {% else %}
+                    <input type="submit" value="follow" class= "follow_submit_btn">
+                    {% endif %}
+                </form>
+                <form action="{% url 'chat:chat_page' chat_id=chats_id other_side_username=user.username%}">
+                    {% csrf_token %}
+                    {% if following %}
+                    <input type="submit" value="send message" class= "send_submit_btn">
+                    {% endif %}
+                </form>
+            {% endif %}
+
+
         </div>
         
     </div>
@@ -65,7 +68,7 @@
     <div class="post_section">
         {% for post in posts %}
             <div class="every_post">
-                <a href=""><img src="{{post.image.url}}" alt=""></a>
+                <a href="{% url 'post:watch' post_pk=post.id%}"><img src="{{post.image.url}}" alt=""></a>
             </div>
         {% endfor %}
     </div>

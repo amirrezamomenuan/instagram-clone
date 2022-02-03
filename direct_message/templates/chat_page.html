@@ -37,7 +37,7 @@
                 
             {% endif %}
         {% endfor %}
-        <form action="{% url 'chat:chat_page' chat_id=messages.0.on_chat.id%}" method="POST" enctype="multipart/form-data">
+        <form action="{% url 'chat:chat_page' chat_id=chats_id other_side_username=other_username %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{form.image_content}}
             {{form.text_content}}

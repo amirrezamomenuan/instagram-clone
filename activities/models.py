@@ -10,7 +10,6 @@ class Activity(models.Model):
 
     class Meta:
         ordering = ['-datetime',]
-        
 
     def __str__(self):
         return self.message[:30]+ '...' if len(self.message) > 30 else self.message
