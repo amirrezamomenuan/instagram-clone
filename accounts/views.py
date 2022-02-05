@@ -141,7 +141,7 @@ def forgot_password_view(request):
                 print("yes")
                 user = models.User.objects.get(phone_number = phone_number)
                 login(request, user)
-                return HttpResponse('login succesfull :)')
+                return redirect("profile:show", profile_username=user.username)
 
             else:
                 print('no')
@@ -172,8 +172,8 @@ def forgot_password_view(request):
 def search_user_view(request):
     if request.method == 'POST':
         given_input = request.POST.get('search')
-        profile = models.Profile.objects.get(user__username__icontains = given_input)
-        return render(request, 'search_results.html', {'profiles':profile})
+        profiles = models.Profile.objects.filter(user__username__icontains = given_input)
+        return render(request, 'search_results.html', {'profiles':profiles})
 
 def followers_view(request, requested):
     profile = models.Profile.objects.get(user__username = requested)
@@ -198,4 +198,3 @@ def follow_manager_view(request):
         profile.save()
 
     return redirect("profile:show", profile_username = username)
-    

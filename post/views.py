@@ -11,7 +11,7 @@ def create_post_view(request):
             form = form.save(commit = False)
             form.owner = request.user.profile
             form.save()
-            return HttpResponse("post created")
+            return redirect("home_and_explore:home")
 
     form = PostForm()
     return render(request, "create_post.html", {'form':form})

@@ -5,13 +5,13 @@
         <form action="{% url 'profile:search_user' %}" method="POST">
             {% csrf_token %}
             <input type="text" placeholder="search in users", name="search">
-            <input type="submit" value="search">
+            <button type="submit"><i class="fa fa-search"></i></button>
         </form>
     </div>
     <div class="container_result">
         <div class="result_container_explore">
             {% for profile in profiles %}
-                <div class="user">
+                <div class="user_in_search">
                     <a href="{% url 'profile:show' profile_username=profile.user.username %}" class="search_results">
                         <img src="{{profile.profile_image.url}}" alt="" style="width: 100px; height: 100px;">
                         <h2>{{profile.user.username}}</h2>

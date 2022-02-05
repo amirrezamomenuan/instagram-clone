@@ -1,11 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    {% if not posts %}
+        <div class="" style="display: flex; flex-direction: column; justify-content: center; align-items: center;" >
+            <h1>you are not following any one</h1>
+            <h1><a href="{% url 'home_and_explore:explore' %}"  style="color: rgb(104, 142, 255);text-decoration: none; font-size: 2.2rem;">explore for posts</a></h1>    
+        </div>
+    {% endif %}
     {% for post in posts %}
     <div class="post">
         <div class="Post_header" style="display: flex;align-items: center;">
             <div class="user_image"><img src="{{post.owner.profile_image.url}}" alt="" style="height: 100px; border-radius: 50%; width: 100px;"></div>
-            <div class="users_name"><p>{{post.owner.user.username}}</p></div>
+            <div class="users_name" style="margin-left: 25px;"><h2>{{post.owner.user.username}}</h2></div>
         </div>
 
         <div class="post_image">
@@ -30,7 +36,7 @@
 
             <div class="comment">
                 <a href="{% url 'post:comments' pk=post.id%}">
-                    <button style="background-color: royalblue;"><p>hell</p></button>
+                    <button style="background-color: transparent; font-size: 1.5rem; cursor: pointer; border: none;"><i class="far fa-comment"></i></button>
                 </a>
             </div>
 
@@ -47,5 +53,10 @@
             {% endfor %}
         </div>
     </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
     {% endfor %}
 {% endblock %}

@@ -1,10 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<form action="{% url 'post:create' %}" method="POST" enctype="multipart/form-data">
+<form action="{% url 'post:create' %}" method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
     {% csrf_token %}
-    {{form.as_p}}
+    
+    <input type="file" name="image" accept="image/*" required="" id="id_image" class="post_creation_image_btn">
+    <textarea name="caption" cols="40" rows="10" maxlength="100" required="" id="id_caption"></textarea>
+    {{form.location}}
     <input type="submit" value="share">
 </form>
 
 {% endblock %}
+
+

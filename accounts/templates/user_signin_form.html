@@ -13,6 +13,6 @@
         <input type="submit" value="signin">
     </form>
 
-    <a href="{% url 'profile:forgot_password' %}">forgot password?</a>
-    <a href="{% url 'profile:signup' %}"></a>
+    <p>forgot password? <a href="{% url 'profile:forgot_password' %}" style="color: rgb(104, 142, 255);text-decoration: none; font-size: 1.2rem;">click here</a></p>
+    <p>dont have account? <a href="{% url 'profile:signup' %}" style="color: rgb(104, 142, 255);text-decoration: none; font-size: 1.2rem;">signup</a></p>
 {% endblock %}

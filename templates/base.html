@@ -16,9 +16,19 @@
     </title>
 </head>
 <body>
-    
+    {% if user.is_authenticated %}
+    <div class="base_header">
+        <ul class="links">
+            <li class="home"><a href="{% url 'home_and_explore:home' %}"><i class="fa fa-home"></i></a></li>
+            <li class="explore"><a href="{% url 'home_and_explore:explore' %}"><i class="fa fa-search"></i></a></li>
+            <li class="share_post"><a href="{% url 'post:create'%}"><i class="fa fa-plus-circle"></i></a></li>
+            <li class="activities"><a href="{% url 'activities:all' %}"><i class="fa fa-bell"></i></a></li>    
+            <li class="profile"><a href="{% url 'profile:show' profile_username=user.get_username %}"><i class="fa fa-user-o"></i></a></li>
+            </ul>
+    </div>
+    {% endif %}
     {% block content %}
     {% endblock %}
-    <div class="footer"></div>
+    
 </body>
 </html>
