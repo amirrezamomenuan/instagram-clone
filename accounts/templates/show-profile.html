@@ -41,7 +41,7 @@
                     <input type="submit" value="follow" class= "follow_submit_btn">
                     {% endif %}
                 </form>
-                <form action="{% url 'chat:chat_page' chat_id=chats_id other_side_username=user.username%}">
+                <form action="{% url 'chat:chat_page' other_side_username=profile.user.username%}">
                     {% csrf_token %}
                     {% if following %}
                     <input type="submit" value="send message" class= "send_submit_btn">

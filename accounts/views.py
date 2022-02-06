@@ -90,7 +90,7 @@ def signin_profile_view(request):
             user = authenticate(request, username = form.cleaned_data['username'], password = form.cleaned_data['password'])
             if user:
                 login(request, user)
-                return HttpResponse('login succesfull :)')
+                return redirect('profile:show' , profile_username = user.get_username())
                 
         content = {"form":form, "form_errors":form.errors}
         return render(request , 'user_signin_form.html', content)

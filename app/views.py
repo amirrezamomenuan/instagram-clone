@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from post.models import Post,Profile,Like
 from django.db.models import Q
 
-@login_required(login_url='accounts:signin')
+@login_required(login_url='profile:signin')
 def home_page_view(request):
     current_user = request.user
     posts = Post.objects.filter(Q(owner__in = current_user.following.all()) | Q(owner =  request.user.profile)).order_by('-date_published')

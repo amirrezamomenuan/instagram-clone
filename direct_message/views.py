@@ -10,18 +10,20 @@ def chat_home_view(request):
 
     return render(request, "chat_home.html", {'chats':chats, 'username':username})
 
-def chat_conversation_view(request, chat_id, other_side_username):
+def chat_conversation_view(request, other_side_username):
     print('stage 1')
     recipient = Profile.objects.get(user__username = other_side_username)
-    print(chat_id)
-    if chat_id == 0:
-        chat = Chat(sender = request.user.profile, recipient = recipient)
-        chat.save()
-        print("stage 2")
-    else:
-        chat = get_object_or_404(Chat, id = chat_id)
-        print('stage 3')
-    
+    print(recipient.user.username)
+    print(request.user.username)
+    try:
+        chat = Chat.objects.get(recipient = recipient, sender = request.user.profile)
+        print('chat is :' ,chat)
+        print('condition 11111111111111111111111')
+    except:
+        chat = Chat.objects.get_or_create(recipient = request.user.profile, sender = recipient)
+        chat = chat[0]
+        print('chat is :' ,chat)
+        print('condition 222222222222222222222222')
 
     if request.method =='POST':
         form = MessageForm(request.POST, request.FILES)
@@ -31,7 +33,7 @@ def chat_conversation_view(request, chat_id, other_side_username):
             form.status = request.user == chat.sender.user
             form.save()
             
-    if Message.objects.filter(on_chat = chat).exists():
+    if Message.objects.filter(on_chat = chat.id).exists():
         messages = chat.messages.all()
         print('stage 4')
     else:
@@ -41,4 +43,4 @@ def chat_conversation_view(request, chat_id, other_side_username):
         
     
     form = MessageForm()
-    return render(request, 'chat_page.html', {'form':form, 'messages':messages, 'username':request.user.username,'other_username':other_side_username,'chats_id':chat_id})
+    return render(request, 'chat_page.html', {'form':form, 'messages':messages, 'username':request.user.username,'other_username':other_side_username})
